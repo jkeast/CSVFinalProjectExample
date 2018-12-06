@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 
 public class LoadTransactionData {
-	//static HashMap<String, String> titleMap;
-	//static ArrayList<Book> bookList;
 	
 	// Fields-list:
 	// generated, TransType, Date, Time, Title,
@@ -20,22 +19,22 @@ public class LoadTransactionData {
 	// TransModifier, DistrictID, TransAmount, TransBalance,
 	// ISSN
 	
-	//public static HTMLColors colorTable = new HTMLColors();
-	//public static Map<String, Color> colorMap = colorTable.makeMap();
-	
-	
+	SortBooks sorted;
 	
 	
 public static void main(String[] args) throws IOException {
 	
 	HashMap<String, String> titleMap = LoadLibraryInventory.getTitleMap();
 	ArrayList<Book> bookList = LoadLibraryInventory.getBookList();
+	
+	//SortBooks sorted = new SortBooks();
+	ArrayList<Book> sortedBooks = new ArrayList<Book>();
 		
 		//bookList = new ArrayList<Book>();
 	//HashMap<String, String> titleMap = LoadLibraryInventory.getTitleMap();
 	//ArrayList<Book> bookList = LoadLibraryInventory.getBookList();
 	
-	System.out.println(titleMap);
+	//System.out.println(titleMap);
 	//System.out.println(bookList);
 	
 		
@@ -48,14 +47,8 @@ public static void main(String[] args) throws IOException {
 				String patron = record.get("PatronType");
 				
 				if(transaction.equals("Checked out")) {
-					//System.out.println("Here!");
-					//System.out.println(title);
-					//System.out.println(titleMap.get(title));
-					//System.out.println(titleMap.containsKey(title));
-					
-					
-					
-					if(titleMap.containsKey(title)) {//&&titleMap.get(title).equals(call)) {
+
+					if(titleMap.containsKey(title)&&titleMap.get(title).equals(call)) {
 						for(Book b:bookList) {
 							if(b.getTitle().equals(title)&&b.getCall().equals(call)){
 								b.addTransaction(patron);
@@ -66,9 +59,18 @@ public static void main(String[] args) throws IOException {
 				
 			}
 		}
-		for(Book b: bookList) {
+		
+		
+		sortedBooks = SortBooks.recursionMergeSort(bookList);
+		
+		for(Book b: sortedBooks.subList(0, 100)) {
 			b.printBook();
 		}
+		
+		
+		//sortedBooks.get(0).printBook();
+		
+
 }
 
 

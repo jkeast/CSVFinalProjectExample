@@ -34,6 +34,7 @@ public class LoadLibraryInventory {
 				String title = record.get("Title");
 				String author = record.get("Author");
 				String call = record.get("CallNumber");
+				String acquired = record.get("Date Acquired");
 				
 				
 				if(call.startsWith("FIC")||call.startsWith("741.5")){
@@ -46,7 +47,7 @@ public class LoadLibraryInventory {
 						}
 					}else {	
 					
-					Book fic = new Book(title, author, call);
+					Book fic = new Book(title, author, call, acquired);
 					bookList.add(fic);
 					titleMap.put(title, call);
 					}
@@ -56,9 +57,6 @@ public class LoadLibraryInventory {
 			}
 		}
 
-		for(Book b: bookList) {
-			b.printBook();
-		}
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -74,7 +72,6 @@ public class LoadLibraryInventory {
 				throw new RuntimeException(ioe);
 			}
 		}
-		System.out.println("are we working");
 		return titleMap;
 	}
 	
