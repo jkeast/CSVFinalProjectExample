@@ -6,69 +6,64 @@ public class Book {
 	String call;
 	String last;
 	String first;
-	String yearAcquired;
+	String full;
+	int yearAcquired;
+	int totCheckOut;
 	int copyNumber;
-	int checkOut;
+	int FiveYcheckOut;
 	int avgCheckOut;
 	int avgCheckOutWeighted;
+	int pastYearCheckOut;
 	NameSplitter splitName;
 
-	public Book(String title, String author, String call, String acquired) {
+	public Book(String title, String author, String call, String acquired, String totalCheckOut, int pastYearCheckOut) {
 		this.title=title;
 		this.author=author;
 		this.call=call;
+		this.totCheckOut=Integer.parseInt(totalCheckOut);
 		this.copyNumber=1;
-		this.checkOut = 0;
+		this.FiveYcheckOut = 0;
+		this.avgCheckOut = totCheckOut;
+		this.avgCheckOutWeighted = totCheckOut;
+		this.pastYearCheckOut = pastYearCheckOut;
 		
-		NameSplitter splitName = new NameSplitter(author);
+		NameSplitter splitName = new NameSplitter(author,true);
 		
-		this.last = splitName.getLast();
-		this.first = splitName.getFirst();
+		//this.last = splitName.getLast();
+		//this.first = splitName.getFirst();
+		
+		this.full=splitName.fullCleaned;
 		
 		String[] dateAcq = acquired.split("/");
 		
-		this.yearAcquired = dateAcq[2];
+		this.yearAcquired = Integer.parseInt(dateAcq[2]);
 	}
 	
 	
-	public String getTitle(){
-		return title;
-	}
 	
-	public String getCall(){
-		return call;
-	}
 	
 	public void addCopy(){
 		copyNumber+=1;
+		
+		avgCheckOut = totCheckOut/copyNumber;
+		avgCheckOutWeighted = avgCheckOut-1;
 	}
 	
 	public void addTransaction(String patronType) {
 		if(patronType.equals("SCCS Faculty/Staff")) {
-			checkOut+=3;
+			FiveYcheckOut+=3;
 		}else {
-			checkOut++;
+			FiveYcheckOut++;
 		}
+		
+
 	}
-	
-	public Integer getCheckOut() {
-		return checkOut;
-	}
-	
-	public Integer getYearAcq() {
-		return Integer.parseInt(yearAcquired);
+
+	public void printBook() {
+		System.out.println(title + " by " + full + " has " + copyNumber + " copies");
+		System.out.println("It has " + totCheckOut + " total checkouts.");
 	}
 	
 
-	public void printBook() {
-		System.out.println(title + " by " + author + " has " + copyNumber + " copies");
-		System.out.println("It has " + checkOut + " total checkouts.");
-	}
-	
-	public void printLast() {
-		System.out.println(first);
-		System.out.println(last);
-		System.out.println(author);
-	}
 	
 }

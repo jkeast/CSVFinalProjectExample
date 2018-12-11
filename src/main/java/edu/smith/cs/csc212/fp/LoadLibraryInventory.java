@@ -34,20 +34,21 @@ public class LoadLibraryInventory {
 				String title = record.get("Title");
 				String author = record.get("Author");
 				String call = record.get("CallNumber");
-				String acquired = record.get("Date Acquired");
-				
+				String acquired = record.get("DateAcquired");
+				String totalCheckOut = record.get("TotalCirculations");
+				Integer pastYearCheckOut = Integer.parseInt(record.get("CirculationsThisYear"))+Integer.parseInt(record.get("CirculationsLastYear"));
 				
 				if(call.startsWith("FIC")||call.startsWith("741.5")){
 					
 					if(titleMap.containsKey(title)&&titleMap.get(title).equals(call)) {
 						for(Book b:bookList) {
-							if(b.getTitle().equals(title)&&b.getCall().equals(call)){
+							if(b.title.equals(title)&&b.call.equals(call)){
 								b.addCopy();
 							}
 						}
 					}else {	
 					
-					Book fic = new Book(title, author, call, acquired);
+					Book fic = new Book(title, author, call, acquired, totalCheckOut, pastYearCheckOut);
 					bookList.add(fic);
 					titleMap.put(title, call);
 					}
