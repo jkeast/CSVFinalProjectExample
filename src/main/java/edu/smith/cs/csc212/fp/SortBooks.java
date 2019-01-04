@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
+//this code was taken from my recursive merge sort and sorted merge sort
+//and sorted merge sort from P7
 public class SortBooks {
 	
+	/**
+	 * sorts two lists (by avg check out) by merging recursively
+	 * @param list1- first of two lists to be sorted
+	 * @param list2- second of two lists to be sorted
+	 * @return sorted list
+	 */
 	public static ArrayList<Book> sortedMergeSort(ArrayList<Book> list1, ArrayList<Book> list2){
 		ArrayList<Book> sorted = new ArrayList<Book>();
 		
@@ -29,7 +36,7 @@ public class SortBooks {
 			//looks at first items in both lists
 			//and adds smallest to sorted list
 			//(removing from original list)
-				//repeat until one list entirely empty
+			//repeat until one list entirely empty
 			}else {
 
 				if(list1.get(0).avgCheckOutWeighted<= list2.get(0).avgCheckOutWeighted) {		
@@ -48,6 +55,12 @@ public class SortBooks {
 		return sorted;
 	}
 	
+	/**
+	 * parent method for recursive merge sort
+	 * 
+	 * @param list- list to be sorted
+	 * @return sorted list
+	 */
 	public static List<Book> merge(List<Book> list){
 		
 		if(list.size()==1) {
@@ -64,10 +77,8 @@ public class SortBooks {
 		return(list);
 	}
 
-
-
 		/**
-		 * 
+		 * takes list to sort and runs it through sorting method
 		 * @param list- list to be sorted
 		 * @return sorted list
 		 */

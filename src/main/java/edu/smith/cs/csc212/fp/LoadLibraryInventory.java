@@ -11,8 +11,15 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 public class LoadLibraryInventory {
-	
+	/**
+	 * list of all fiction books in collection
+	 */
 	static ArrayList<Book> bookList;
+	
+	/**
+	 * map of all fiction books in collection, with book title as key and author as value
+	 * used to help find duplicate copies
+	 */
 	static HashMap<String, String> titleMap;
 	// Fields-list:
 	// generated,CopyBarcode,CallNumber,Title,Author,
@@ -23,6 +30,10 @@ public class LoadLibraryInventory {
 	// DateCheckedOut,Sublocation,PatronType,PurchasePrice,
 	// CopyNumber,Vendor,ISSN,DescEnum1
 	
+	/**
+	 * loads in inventory data and stores all fiction books in arraylist
+	 * @throws IOException
+	 */
 	public static void load() throws IOException {
 		bookList = new ArrayList<Book>();
 		titleMap = new HashMap<String, String>();
@@ -36,8 +47,11 @@ public class LoadLibraryInventory {
 				String call = record.get("CallNumber");
 				String acquired = record.get("DateAcquired");
 				String totalCheckOut = record.get("TotalCirculations");
-				Integer pastYearCheckOut = Integer.parseInt(record.get("CirculationsThisYear"))+Integer.parseInt(record.get("CirculationsLastYear"));
+				Integer pastYearCheckOut = Integer.parseInt(record.get("CirculationsThisYear"))+
+						Integer.parseInt(record.get("CirculationsLastYear"));
 				
+				//741.5 is call number for graphic novels
+				//analyze along with fiction
 				if(call.startsWith("FIC")||call.startsWith("741.5")){
 					
 					if(titleMap.containsKey(title)&&titleMap.get(title).equals(call)) {
@@ -60,11 +74,19 @@ public class LoadLibraryInventory {
 
 	}
 	
+	/**
+	 * runs load
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
 		load();
 		
 	}
 	
+	/**
+	 * @return titleMap
+	 */
 	public static HashMap<String, String> getTitleMap(){
 		if (titleMap == null || titleMap.isEmpty()) {
 			try {
@@ -76,6 +98,9 @@ public class LoadLibraryInventory {
 		return titleMap;
 	}
 	
+	/**
+	 * @return bookList
+	 */
 	public static ArrayList<Book> getBookList(){
 		if (bookList == null || bookList.isEmpty()) {
 			try {

@@ -22,9 +22,18 @@ public class LoadTransactionData {
 	// TransModifier, DistrictID, TransAmount, TransBalance,
 	// ISSN
 	
+	/**
+	 * list of all fiction books sorted by average number of checkouts
+	 */
 	SortBooks sorted;
 	
-	
+/**
+ * loads in transaction data and counts number of checkouts for all individual fiction books
+ * 
+ * then makes calls on which books are good candidates to weed
+ * @param args
+ * @throws IOException
+ */
 public static void main(String[] args) throws IOException {
 	
 	HashMap<String, String> titleMap = LoadLibraryInventory.getTitleMap();
@@ -38,8 +47,11 @@ public static void main(String[] args) throws IOException {
 				String call = record.get("CallNumber");
 				String patron = record.get("PatronType");
 				
+				//only looks at check out info
 				if(transaction.equals("Checked out")) {
 
+					//looks to see if book is in our list of fiction books
+					//if so, adds to check out number for that book
 					if(titleMap.containsKey(title)&&titleMap.get(title).equals(call)) {
 						for(Book b:bookList) {
 							if(b.title.equals(title)&&b.call.equals(call)){
@@ -54,10 +66,13 @@ public static void main(String[] args) throws IOException {
 		
 		
 		
-		
+		//sorts books by number of average checkouts
 		ArrayList<Book> sortedBooks = SortBooks.recursionMergeSort(bookList);
+		
+		//finds number of books with no check outs
 		int numZero=0;
 		for(Book b: sortedBooks) {
+			//goes less than zero to count for negatively weighted books
 			if(b.avgCheckOutWeighted<=0) {
 				numZero++;
 			}else {
@@ -66,14 +81,21 @@ public static void main(String[] args) throws IOException {
 			}
 		}
 		
+		//percent of books to be weeded
 		double percent = .15;
+		
+		//number of books to suggest to weed
 		int numToRemove;
+		
+		//if books with zero checkouts exceeds percentage to weed
+		//will suggest all books with zero checkouts (and ignore percentage)
 		if(percent*sortedBooks.size()<numZero) {
 			numToRemove=numZero;
 		}else {
 			numToRemove = (int) (percent*sortedBooks.size());
 		}
 		
+		//splits list of sorted books into list to week and list to keep
 		List<Book> toWeed = sortedBooks.subList(0, numToRemove);
 		List<Book> toKeep = sortedBooks.subList(numToRemove, sortedBooks.size());
 		
@@ -81,6 +103,7 @@ public static void main(String[] args) throws IOException {
 		
 		ArrayList<String> authorList = new ArrayList<String>();
 		
+		//list of all authors whose books are in keep list
 		for(Book b: toKeep) {
 			if(!authorList.contains(b.full)) {
 				authorList.add(b.full);
@@ -89,13 +112,17 @@ public static void main(String[] args) throws IOException {
 		
 		for(Book b: toWeed) {
 			
+			//makes sure we don't weed book by classic or local author
 			if(ClassicsAndLocal.classics().contains(b.full)||ClassicsAndLocal.local().contains(b.full)) {
-				//System.out.println(b.title+ "classics or local "+b.full);
 				toRemove.add(b);
+			//makes sure we don't weed a new book
 			}else if(b.yearAcquired>2015) {
 				toRemove.add(b);
+			//makes sure we don't remove book when keeping others by same author
+				//preventative measure so don't remove part of a series while leaving other part
 			}else if(authorList.contains(b.full)) {
 				toRemove.add(b);
+			//makes sure we don't remove book with recent circulation
 			}else if(b.FiveYcheckOut>2||b.pastYearCheckOut>0) {
 				toRemove.add(b);
 			}
@@ -105,24 +132,8 @@ public static void main(String[] args) throws IOException {
 			toWeed.remove(b);
 		}
 		
-		int i = 0;
-		System.out.println(toWeed.size());
-		for(Book b: toWeed) {
-			System.out.println(i);
-			b.printBook();
-			i++;
-		}
-		
-		//what I want to return:
-		//book, author, call
-		//total checkouts, checkouts past 5 years
-		
-		
-OutputWriter.saveToFile("weedme.csv", toWeed);		
-		
-		
-
-		
+		//writes all remaining in toWeed list to csv file
+		OutputWriter.saveToFile("weedme.csv", toWeed);		
 
 }
 

@@ -17,12 +17,16 @@ import org.apache.commons.csv.CSVPrinter;
 //https://www.geeksforgeeks.org/writing-a-csv-file-in-java-using-opencsv/
 
 public class OutputWriter {
+	/**
+	 * saves info on book's title, author, call number, number of copies, total checkout, and past five years check out
+	 * to CSV file
+	 * @param where- directory to which to save file
+	 * @param data- list of data (in form of booklist) to be saving in csv
+	 * @throws IOException
+	 */
     public static void saveToFile(String where, List<Book> data) throws IOException {
-    	//try-with-resources
         try (
             BufferedWriter writer = Files.newBufferedWriter(Paths.get(where));
-//b.title, b.author, b.call, String.valueOf(b.copyNumber), 
-				//String.valueOf(b.totCheckOut), String.valueOf(b.FiveYcheckOut)}
             CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                     .withHeader("Title", "Author", "CallNumber", "NumberOfCopies",
                     		"TotalCheckouts", "NumberCheckoutsPast5Years"));
@@ -34,6 +38,3 @@ public class OutputWriter {
         }
     }
 }
-
-
-

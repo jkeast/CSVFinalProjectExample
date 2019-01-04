@@ -1,20 +1,77 @@
 package edu.smith.cs.csc212.fp;
 
 public class Book {
+	/**
+	 * full name of author, written in last,first format
+	 */
 	String author;
+	
+	/**
+	 * title of book
+	 */
 	String title;
+	
+	/**
+	 * call number
+	 */
 	String call;
+	
+	/**
+	 * last name of author
+	 */
 	String last;
+	
+	/**
+	 * first name of author (may also include middle)
+	 */
 	String first;
+	
+	/**
+	 * full name of author, in first last format
+	 */
 	String full;
+	
+	/**
+	 * year book was acquired by library
+	 */
 	int yearAcquired;
+	
+	/**
+	 * total number of check outs since acquired
+	 */
 	int totCheckOut;
+	
+	/**
+	 * how many copies of book there are in collection
+	 */
 	int copyNumber;
+	
+	/**
+	 * total number of check outs in the past five years
+	 */
 	int FiveYcheckOut;
+	
+	/**
+	 * average total checkout over number of copies
+	 */
 	int avgCheckOut;
+	
+	/**
+	 * average total checkout weighted 
+	 * so books with multiple copies have less weight
+	 */
 	int avgCheckOutWeighted;
+	
+	/**
+	 * number of check outs in past year
+	 */
 	int pastYearCheckOut;
+	
+	/**
+	 * iteration of NameSplitter class to get author first and last names
+	 */
 	NameSplitter splitName;
+	
 
 	public Book(String title, String author, String call, String acquired, String totalCheckOut, int pastYearCheckOut) {
 		this.title=title;
@@ -28,10 +85,7 @@ public class Book {
 		this.pastYearCheckOut = pastYearCheckOut;
 		
 		NameSplitter splitName = new NameSplitter(author,true);
-		
-		//this.last = splitName.getLast();
-		//this.first = splitName.getFirst();
-		
+
 		this.full=splitName.fullCleaned;
 		
 		String[] dateAcq = acquired.split("/");
@@ -41,7 +95,9 @@ public class Book {
 	
 	
 	
-	
+	/**
+	 * adds copy of book when another is found
+	 */
 	public void addCopy(){
 		copyNumber+=1;
 		
@@ -49,6 +105,12 @@ public class Book {
 		avgCheckOutWeighted = avgCheckOut-1;
 	}
 	
+	/**
+	 * adds to checkout count
+	 * weights teacher checkouts
+	 * @param patronType-type of patron who checked out book
+	 * ex: campus school class year, faculty/staff, Smith College student etc
+	 */
 	public void addTransaction(String patronType) {
 		if(patronType.equals("SCCS Faculty/Staff")) {
 			FiveYcheckOut+=3;
@@ -57,13 +119,7 @@ public class Book {
 		}
 		
 
-	}
-
-	public void printBook() {
-		System.out.println(title + " by " + full + " has " + copyNumber + " copies");
-		System.out.println("It has " + totCheckOut + " total checkouts.");
-	}
-	
+	}	
 
 	
 }

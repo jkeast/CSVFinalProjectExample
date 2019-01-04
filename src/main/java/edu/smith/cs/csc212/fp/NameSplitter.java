@@ -2,17 +2,48 @@ package edu.smith.cs.csc212.fp;
 
 
 public class NameSplitter {
+	/**
+	 * name of author as was input
+	 */
 	String fullName;
+	
+	/**
+	 * split last name of author
+	 */
 	String last;
+	
+	/**
+	 * split first name of author
+	 */
 	String first;
+	
+	/**
+	 * split first name of author cleaned to not include years, punctuation, etc
+	 */
 	String firstCleaned;
+	
+	/**
+	 * combined cleaned first and last name
+	 */
 	String fullCleaned;
+	
+	/**
+	 * true if author name is written as last, first
+	 * false if author name is written as first last
+	 */
 	Boolean orderLast;
 
-	
+	/**
+	 * splits full name into first and last
+	 * 
+	 * @param fullName- full name of author
+	 * @param orderLast- true if name written as last, first
+	 */
 	public NameSplitter(String fullName, Boolean orderLast) {
 		this.fullName=fullName;
 		
+		//if orderLast, assigns string before comma to last name
+		//and string after comma to first
 		if(orderLast) {
 			String[] parts = fullName.split(", ");
 			this.last = parts[0];
@@ -22,6 +53,8 @@ public class NameSplitter {
 			}else {
 				first = null;
 			}
+		//if else, splits by space and assigns last part to last name
+			//all else to first
 		}else {
 			String[] parts = fullName.split(" ");
 			if(parts.length==1) {
@@ -51,6 +84,10 @@ public class NameSplitter {
 			
 		}
 		
+		//cleans first name by removing anything after punctuation
+		//this will remove years as well as many inconsistancies for the same author
+		//although will not capture all names correctly (ie E.B. White becomes E White)
+		//should make name of an author largely consistent for all iterations
 		if(first != null) {
 			String[] splitByPunct = first.split("\\p{Punct}");
 			firstCleaned = splitByPunct[0];
@@ -58,33 +95,11 @@ public class NameSplitter {
 			firstCleaned = null;
 		}
 		
+		//rewrites full name with split names
+		//so will be consistent for all iterations regardless of source
 		fullCleaned = firstCleaned + " " + last;
 
 		
 	}
-/*
-	public String getLast() {
-		//if name has comma in it, get string until comma
-		//if no comma NEED TO FIGURE OUT --want to go from end??
-
-		return last;
-	}
-	
-	public String getFirst() {
-		//if name has comma in it, get string after comma until first punctuation
-		//if no comma, go until there is space OR Punctuation
-		
-		if(first != null) {
-			String[] splitByPunct = first.split("\\p{Punct}");
-			String cleaned = splitByPunct[0];
-		
-		
-			return cleaned;
-		}else {
-			return null;
-		}
-	}*/
-	
-	
 
 }
